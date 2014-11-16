@@ -89,6 +89,8 @@ public final class SVGViewer {
     private JLabel lbltimer_1;
     private int time;
     private Timer timer;
+    private boolean fail=false;
+    private boolean lastQ=false;
   
    private static CurrentObjects currentObjects;
     
@@ -713,7 +715,7 @@ public final class SVGViewer {
                   stopTimer();
 //                  startTimer();
                   initTimer();
-                  
+                  fail=false;
                    if(MainWindow.currentLevel==1){
                     switch(Question.questionNumber){
                         case 1:
@@ -840,55 +842,62 @@ public final class SVGViewer {
                             decorateAnswerLabel(lb1_1, false);
 //                            MainWindow.nextQuestion(1);
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                            fail=true;
                             break;
                         case 2:
                             lbl1_2.setText("Answer 2");
                             decorateAnswerLabel(lbl1_2, false);
 //                            MainWindow.nextQuestion(1);
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                            fail=true;
                             break;
                         case 3:
                             lbl1_3.setText("Answer 3");
                             decorateAnswerLabel(lbl1_3, false);
 //                            MainWindow.nextQuestion(1);
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                            fail=true;
                             break;
                         case 4:
                             lbl1_4.setText("Answer 4");
                             decorateAnswerLabel(lbl1_4, false);
 //                            MainWindow.nextQuestion(1);
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                            fail=true;
                             break;
                         case 5:
                             lbl1_5.setText("Answer 5");
                             decorateAnswerLabel(lbl1_5, false);
 //                            MainWindow.nextQuestion(1);
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                            fail=true;
+                            lastQ=true;
                            if(attempts==3) 
-                            if(MainWindow.requirement>successAnswers){
-                                window.alert("You didn't reach the requirement of 3 good answers.");
-                                SVGFrame.dispose();
-                                successAnswers=0;
-                                attempts=0;
-                                getTimer().stop();
-                                MainWindow.myMain.setVisible(true);
-                            }else{
-                                window.alert("Congratulations!! You are passing to the Next Step");
-                                getTimer().stop();
-                                SVGFrame.dispose();
-                                
-                                MainWindow.nextLevel();
-                                successAnswers=0;
-                                attempts=0;
-                                SVGFrame.dispose();
-                                frameLevel2.setVisible(true);
-                                frameLevel2.setSize(691, 534);
-                                
-                                getQuestionArea2().setText(MainWindow.currentQuestion.generateRandomQuestion());
-//                                MainWindow.drawHeroPhotoCurrentQuestion();
-                                drawHeroImageCurrentQuestion(MainWindow.dataHashMapHero.get(MainWindow.currentQuestion.getRandomCountryID()).getPhotoURL(),photoLabel,canvaspanel);
-
-                            }
+//                            if(MainWindow.requirement>successAnswers){
+//                                window.alert("You didn't reach the requirement of 3 good answers.");
+//                                SVGFrame.dispose();
+//                                successAnswers=0;
+//                                attempts=0;
+//                                getTimer().stop();
+//                                MainWindow.myMain.setVisible(true);
+//                            }else{
+//                                window.alert("Congratulations!! You are passing to the Next Step");
+//                                getTimer().stop();
+//                                SVGFrame.dispose();
+//                                
+//                                MainWindow.nextLevel();
+//                                successAnswers=0;
+//                                attempts=0;
+//                                SVGFrame.dispose();
+//                                frameLevel2.setVisible(true);
+//                                frameLevel2.setSize(691, 534);
+//                                
+//                                getQuestionArea2().setText(MainWindow.currentQuestion.generateRandomQuestion());
+////                                MainWindow.drawHeroPhotoCurrentQuestion();
+//                                drawHeroImageCurrentQuestion(MainWindow.dataHashMapHero.get(MainWindow.currentQuestion.getRandomCountryID()).getPhotoURL(),photoLabel,canvaspanel);
+//
+//                            }
+                           faildAndMove();
                             break;
                         default :
                             {
@@ -931,6 +940,10 @@ public final class SVGViewer {
                           attempts=0;
                           if(MainWindow.currentLevel==1){
                           //Call Next Question
+                              //before calling the next question, let's reset the timer
+                              getTimer().stop();
+                              initTimer();
+                              fail=false;
                           MainWindow.nextQuestion(1);
                           questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
                           }else if(MainWindow.currentLevel==2){
@@ -1001,7 +1014,11 @@ public final class SVGViewer {
     }
     
     public void nextQUpdateElments(JLabel _label,String _text,int _level,int _qnumber,boolean _decorate){
-       if (_qnumber==5){
+      
+        _label.setText(_text);
+        decorateAnswerLabel(_label, _decorate);
+        
+        if (_qnumber==5){
            attempts=0;
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
                             if(MainWindow.requirement>successAnswers){
@@ -1018,14 +1035,15 @@ public final class SVGViewer {
                                 frameLevel2.setVisible(true);
                                 frameLevel2.setSize(691, 534);
                                 
+                                stopTimer();
+                                
                                 getQuestionArea2().setText(MainWindow.currentQuestion.generateRandomQuestion());
 //                                MainWindow.drawHeroPhotoCurrentQuestion();
                                 drawHeroImageCurrentQuestion(MainWindow.dataHashMapHero.get(MainWindow.currentQuestion.getRandomCountryID()).getPhotoURL(),photoLabel,canvaspanel);
                             
                     }
         }else{
-        _label.setText(_text);
-        decorateAnswerLabel(_label, _decorate);
+        
         MainWindow.nextQuestion(_level);
         attempts=0;
         questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
@@ -1151,6 +1169,33 @@ public final class SVGViewer {
         }
     }
     
+    public void faildAndMove(){
+        if(MainWindow.requirement>successAnswers){
+                                window.alert("You didn't reach the requirement of 3 good answers.");
+                                SVGFrame.dispose();
+                                successAnswers=0;
+                                attempts=0;
+                                getTimer().stop();
+                                MainWindow.myMain.setVisible(true);
+                            }else{
+                                window.alert("Congratulations!! You are passing to the Next Step");
+                                getTimer().stop();
+                                SVGFrame.dispose();
+                                
+                                MainWindow.nextLevel();
+                                successAnswers=0;
+                                attempts=0;
+                                SVGFrame.dispose();
+                                frameLevel2.setVisible(true);
+                                frameLevel2.setSize(691, 534);
+                                
+                                getQuestionArea2().setText(MainWindow.currentQuestion.generateRandomQuestion());
+//                                MainWindow.drawHeroPhotoCurrentQuestion();
+                                drawHeroImageCurrentQuestion(MainWindow.dataHashMapHero.get(MainWindow.currentQuestion.getRandomCountryID()).getPhotoURL(),photoLabel,canvaspanel);
+
+                            }
+    }
+    
      public class TimerListener implements ActionListener{
         private int time;
         private JLabel label;
@@ -1165,12 +1210,92 @@ public final class SVGViewer {
             if(time>=1){
                 label.setText(""+time);
             }else{
-                getTimer().stop();
-                label.setText("OVER");
+                stopTimer();
+                fail=true;
                 Toolkit.getDefaultToolkit().beep();
-                
-                //   nextQUpdateElments(currentObjects.getCurrentLabel(), currentObjects.getCurrentText(), currentObjects.getCurrentLevel(), 
-                 //      currentObjects.getCurrentQNumber(), currentObjects.isPaintLabel());
+                if(fail){
+                    label.setText("00");
+                    if(!lastQ){
+                        try{
+                            stopTimer();
+                            initTimer();
+                            attempts=0;
+                            
+                            
+                        switch(Question.questionNumber){
+                        case 1:
+                            lb1_1.setText("Answer 1");
+                            decorateAnswerLabel(lb1_1, false);
+                            fail=true;
+                            break;
+                        case 2:
+                            lbl1_2.setText("Answer 2");
+                            decorateAnswerLabel(lbl1_2, false);
+                            fail=true;
+                            break;
+                        case 3:
+                            lbl1_3.setText("Answer 3");
+                            decorateAnswerLabel(lbl1_3, false);
+                            fail=true;
+                            break;
+                        case 4:
+                            lbl1_4.setText("Answer 4");
+                            decorateAnswerLabel(lbl1_4, false);
+                            fail=true;
+                            break;
+                        case 5:
+                            lbl1_5.setText("Answer 5");
+                            decorateAnswerLabel(lbl1_5, false);
+                            fail=true;
+                            lastQ=true;
+                           if(attempts<=3){ 
+                           attempts=0; 
+                            faildAndMove();
+                           }
+                            break;
+                        default :
+                            {
+                                                            
+                            System.out.println("Default Answer");
+                        }
+                    }
+                     
+                        
+                         fail=false;
+                         MainWindow.nextQuestion(1);
+                          questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
+                        }catch(NullPointerException ex){
+                            System.err.println("currentObjects in Fail are null ");
+                            ex.printStackTrace();
+                        }
+                    }else{
+                        stopTimer();
+                        initTimer();
+                        fail=false;
+                        if(attempts<=3){
+                            attempts=0;
+                            faildAndMove();
+                        }
+                    }
+                }else{
+                    try{
+                       nextQUpdateElments(currentObjects.getCurrentLabel(), currentObjects.getCurrentText(), currentObjects.getCurrentLevel(), 
+                           currentObjects.getCurrentQNumber(), currentObjects.isPaintLabel());
+                    }catch(NullPointerException ex){
+                        
+                        window.alert("You didn't click on the Map, the game will exit...");
+                        System.err.println("currentObjects null ");
+                        
+                        SVGFrame.dispose();
+                        successAnswers=0;
+                        attempts=0;
+                        getTimer().stop();
+                        MainWindow.myMain.setVisible(true);
+                        
+                        //ex.printStackTrace();
+                    }
+                }
+            
             }
         }
     }
