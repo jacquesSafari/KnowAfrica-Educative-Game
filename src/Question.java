@@ -21,6 +21,8 @@ public class Question {
     static HashMap<String, Integer> questionCountryStatus=new HashMap<>();
     static HashMap<String, String> questionHeroStatus=new HashMap<>();
     static int questionNumber;
+    
+    public Question(){}
 
     public Question(int level) {
         this.level = level;
