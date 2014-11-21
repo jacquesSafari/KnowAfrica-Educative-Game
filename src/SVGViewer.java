@@ -96,6 +96,7 @@ public final class SVGViewer {
     
     public SVGViewer() {
         currentObjects=new CurrentObjects();
+        
     }
 
     public SVGViewer(JPanel canvaspanel, String svgfile,final JFrame frame) {
@@ -714,11 +715,16 @@ public final class SVGViewer {
                   attempts=0;
                   //RESET THE TIMER HERE
 //                  setTime(MainWindow.time);
-                  stopTimer();
+//                  stopTimer();
 //                  startTimer();
-                  initTimer();
+//                  initTimer();
                   fail=false;
                    if(MainWindow.currentLevel==1){
+                       //RESET THE TIMER HERE
+//                  setTime(MainWindow.time);
+//                  stopTimer();
+//                  startTimer();
+//                  initTimer();
                     switch(Question.questionNumber){
                         case 1:
 //                            lb1_1.setText("Answer 1");
@@ -802,12 +808,14 @@ public final class SVGViewer {
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
                        if(Question.questionNumber==5)
                             if(MainWindow.requirement>successAnswers){
+//                               stopTimer();
                                 window.alert("You didn't reach the requirement of 3 good answers.");
                                 SVGFrame.dispose();
                                 successAnswers=0;
-                                stopTimer();
+                                
                                 MainWindow.myMain.setVisible(true);
                             }else{
+//                                stopTimer();
                                 window.alert("Congratulations!! You are an African Continent Specialist Now!");
                                 SVGFrame.dispose();
 //                                MainWindow.nextLevel();
@@ -923,6 +931,7 @@ public final class SVGViewer {
                                }
                             }else{
                                if(attempts==3){
+                                killTimer();
                                 window.alert("Congratulations!! You are an African Continent Specialist Now!");
                                 SVGFrame.dispose();
 //                                MainWindow.nextLevel();
@@ -1031,11 +1040,17 @@ public final class SVGViewer {
            _qnumber=0;
 //                            questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
                             if(MainWindow.requirement>successAnswers){
+                                killTimer();
+                                
                                 window.alert("You didn't reach the requirement of 3 good answers.");
                                 SVGFrame.dispose();
+                                
+                                //stopTimer();
+                                
                                 successAnswers=0;
                                 MainWindow.myMain.setVisible(true);
                             }else{
+                                killTimer();
                                 window.alert("Congratulations!! You are passing to the Next Step");
                                 SVGFrame.dispose();
                                 MainWindow.nextLevel();
@@ -1044,7 +1059,7 @@ public final class SVGViewer {
                                 frameLevel2.setVisible(true);
                                 frameLevel2.setSize(691, 534);
                                 
-                                stopTimer();
+//                                stopTimer();
                                 
                                 getQuestionArea2().setText(MainWindow.currentQuestion.generateRandomQuestion());
 //                                MainWindow.drawHeroPhotoCurrentQuestion();
@@ -1053,6 +1068,8 @@ public final class SVGViewer {
                     }
         }else{
         
+        stopTimer();
+        initTimer();
         MainWindow.nextQuestion(_level);
         attempts=0;
         questionArea.setText(MainWindow.currentQuestion.generateRandomQuestion());
@@ -1170,28 +1187,43 @@ public final class SVGViewer {
         }
     }
     public void stopTimer(){
-        try{
+    try{  
+        if(getTimer().isRunning()){
+            System.out.println("TIMER STILL RUNNING... trying to stop it");
             getTimer().stop();
+        }else
+            System.out.println("TIMER NOT RUNNING...");
+//        try{
+//            getTimer().stop();
+//            
+//            
         }catch(NullPointerException e){
             System.err.println("Timer not initialized." );
             e.printStackTrace();
         }
     }
     
+    public void killTimer(){
+        stopTimer();
+        this.setTimer(null);
+    }
+    
     public void faildAndMove(){
        
         if(MainWindow.requirement>successAnswers){
+                                killTimer();
                                 window.alert("You didn't reach the requirement of 3 good answers.");
                                 SVGFrame.dispose();
                                 successAnswers=0;
                                 attempts=0;
                                 lastQ=false;
                                 Question.questionNumber=0;
-                                getTimer().stop();
+                                
                                 MainWindow.myMain.setVisible(true);
                             }else{
+                                killTimer();
                                 window.alert("Congratulations!! You are passing to the Next Step");
-                                getTimer().stop();
+                                
                                 SVGFrame.dispose();
                                 
                                 MainWindow.nextLevel();
@@ -1220,13 +1252,24 @@ public final class SVGViewer {
         public void actionPerformed(ActionEvent e) {
             time--;
             if(time>=1){
-                label.setText(""+time);
+               try{
+                   label.setText(""+time);
+               }catch(NullPointerException ex){
+                   System.err.println("Label on timer pointing to null");
+                   ex.printStackTrace();
+               }
+                
             }else{
                 stopTimer();
                 fail=true;
                 Toolkit.getDefaultToolkit().beep();
                 if(fail){
-                    label.setText("00");
+                    try{
+                        label.setText("00");
+                    }catch(NullPointerException ex){
+                        System.err.println("Label on timer pointing to null");
+                        ex.printStackTrace();
+                    }
                     if(!lastQ){
                         try{
                             stopTimer();
@@ -1295,7 +1338,7 @@ public final class SVGViewer {
                        nextQUpdateElments(currentObjects.getCurrentLabel(), currentObjects.getCurrentText(), currentObjects.getCurrentLevel(), 
                            currentObjects.getCurrentQNumber(), currentObjects.isPaintLabel());
                     }catch(NullPointerException ex){
-                        
+                        killTimer();
                         window.alert("You didn't click on the Map, the game will exit...");
                         System.err.println("currentObjects null ");
                         

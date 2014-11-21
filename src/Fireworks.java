@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -22,11 +23,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.swing.JButton;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -46,11 +43,30 @@ public final class Fireworks extends JFrame {
 
 	private JPanel mainPanel;
 
+        private final String iconApplicaiton="svg/AfricaIcone.png";
     /**
      * @return the mainPanel
      */
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+    
+     /**
+     * 
+     * @param imagePath : the path to the image
+     * @return Image: ImageIcon object
+     */
+    public Image buildImage(String imagePath){
+        ImageIcon imgIco=new ImageIcon();
+        Image img=null;
+        try {
+            imgIco= new ImageIcon(imagePath);
+            img=imgIco.getImage();
+        } catch (Exception e) {
+            System.err.println("Error in Building IconImage. Please very the path");
+        }
+        
+        return img;
     }
 
     /**
@@ -179,7 +195,11 @@ public final class Fireworks extends JFrame {
 
 	public Fireworks() {
 		super("Know Africa Congratulations");
-
+                
+//                this.setIconIma;
+                
+                this.setIconImage(buildImage(iconApplicaiton));
+                
 		this.mainPanel = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {

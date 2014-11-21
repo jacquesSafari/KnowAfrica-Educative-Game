@@ -1,4 +1,5 @@
 
+import java.awt.Image;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -18,6 +19,7 @@ import javax.swing.Timer;
  * @author Safari
  */
 public final class MainWindow extends javax.swing.JFrame {
+    
 
     /**
      * Creates new form MainWindow
@@ -28,8 +30,15 @@ public final class MainWindow extends javax.swing.JFrame {
         
         svgfile="svg/blankMap.svg";
         iconFileName="svg/african_nations_independence.gif";
+        iconApplicaiton="svg/AfricaIcone.png";
         
+        //setting the icon for the applicaiton
         
+        this.setIconImage(buildImage(iconApplicaiton));
+        Level1.setIconImage(buildImage(iconApplicaiton));
+        Level2.setIconImage(buildImage(iconApplicaiton));
+        Level3.setIconImage(buildImage(iconApplicaiton));
+        Congratulations.setIconImage(buildImage(iconApplicaiton));
         //calling the svgviewer
 //        new SVGViewer(mapPanel1, svgfile).view();
 //        Level1.pack();
@@ -83,6 +92,23 @@ public final class MainWindow extends javax.swing.JFrame {
         mySVGViewer.setLbltimer_1(timerLabel);
     }
     
+    /**
+     * 
+     * @param imagePath : the path to the image
+     * @return Image: ImageIcon object
+     */
+    public Image buildImage(String imagePath){
+        ImageIcon imgIco=new ImageIcon();
+        Image img=null;
+        try {
+            imgIco= new ImageIcon(imagePath);
+            img=imgIco.getImage();
+        } catch (Exception e) {
+            System.err.println("Error in Building IconImage. Please very the path");
+        }
+        
+        return img;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1004,6 +1030,12 @@ public final class MainWindow extends javax.swing.JFrame {
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         viewHelp();
     }//GEN-LAST:event_jButton12ActionPerformed
+    /**
+     * draw icon image on the label 
+     * @param iconName : the path to the icon
+     * @param panel : Panel on which the label is situated
+     * @param label : JLable on which to draw the hero's image
+     */
     public  void drawImageIcon(String iconName,JPanel panel,JLabel label){
 //        myIcon= new ImageIcon(iconName);
         ImageIcon myIcon= new ImageIcon(iconName);
@@ -1017,6 +1049,9 @@ public final class MainWindow extends javax.swing.JFrame {
     }
     
 //  public 
+    /**
+     * draw hero on the panel concerned
+     */
     
   public void drawHeroImageCurrentQuestion(){
       
@@ -1044,7 +1079,9 @@ public final class MainWindow extends javax.swing.JFrame {
       
       
   }
-  
+  /**
+   * Increments the level, initializes the questionNumber and moves to the next question
+   */
   public static void nextLevel(){
      currentLevel++;
      Question.questionNumber=0;
@@ -1054,7 +1091,9 @@ public final class MainWindow extends javax.swing.JFrame {
   
   
   
-    
+    /**
+     * Fills the hashmap with data about countries. The key is the country's iso code and the value is the country object
+     */
    public void fillHashMap(){
 //       dataHashMap.put("ao", new Country("ao", ".ao", "Angola"));
 //       dataHashMap.put("za", new Country("za", ".co.za", "South Africa"));
@@ -1122,6 +1161,9 @@ public final class MainWindow extends javax.swing.JFrame {
        
    }
    
+   /**
+    * Fill the hashmap with heroes data
+    */
    
    public void fillHashHero(){
  
@@ -1204,6 +1246,9 @@ public final class MainWindow extends javax.swing.JFrame {
     static int currentLevel;
     final static int requirement=3;
     public static MainWindow myMain;
+    
+    public final String iconApplicaiton;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Answer2lbl;
     private javax.swing.JLabel Answer3lbl;
@@ -1283,6 +1328,9 @@ public final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel yourSelection2;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * initializes components(labes,decorations ...)
+     */
     private void initMyComponents() {
         answer1lbl.setText("");
         answer1lbl.setBorder(null);
@@ -1310,6 +1358,9 @@ public final class MainWindow extends javax.swing.JFrame {
         
     }
 
+    /**
+     * Makes the Help frame visible and resizes it
+     */
     private void viewHelp() {
         Help.setVisible(true);
         Help.setSize(625, 395);
